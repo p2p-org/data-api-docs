@@ -308,9 +308,11 @@ components:
       properties:
         blockchain_name:
           type: string
+          example: "Ethereum"
           description: The name of the blockchain.
         ecosystem_name:
           type: string
+          example: "Ethereum ecosystem"
           description: The name of Ecosystem.
 
     BlockchainPeriodCollectionItem:
@@ -321,12 +323,19 @@ components:
       properties:
         blockchain_name:
           type: string
+          example: "Polkadot"
           description: The name of the blockchain.
         ecosystem_name:
           type: string
+          example: "Polkadot ecosystem"
           description: The name of Ecosystem.
         blockchain_period_name:
           type: string
+          enum:
+            - era
+            - block
+            - epoch
+          example: "era"
           description: The name of period that rewards and other stat are collected by the API.
 
     BlockchainReportCollectionItem:
@@ -337,43 +346,59 @@ components:
       properties:
         blockchain_name:
           type: string
+          example: "Polkadot"
           description: The name of the blockchain.
         ecosystem_name:
           type: string
+          example: "Polkadot ecosystem"
           description: The name of Ecosystem.
         blockchain_period_name:
           type: string
+          enum:
+            - era
+            - block
+            - epoch
+          example: "era"
           description: The name of period that rewards and other stat are collected by the API.
         blockchain_period_num:
           type: string
+          example: "946"
           description: |
             The value of blockchain_period
             (number in case of `era` `epoc` `block` and the day in case of point in time).
         datetime_from:
           type: string
+          example: "2023-01-04 15:36:18.014000"
           format: datetime
           description: The start of period (blockchain_period).
         datetime_to:
           type: string
+          example: "2023-01-05 15:36:18.011000"
           format: datetime
           description: The end of period (blockchain_period).
         blockchain_total_rewards:
           type: string
+          example: "241225.0405479788"
           description: All rewards that were paid for the current period (blockchain_period).
         reward_coingecoid:
           type: string
+          example: "polkadot"
           description: Token id in coingecko for rewards.
         blockchain_total_stake:
           type: string
+          example: "504346062.64968455"
           description: Total stake for the current period (blockchain_period).
         stake_coingecoide:
           type: string
+          example: "polkadot"
           description: Token id in coingecko for stake.
         delegators_num:
           type: string
+          example: "20241"
           description: The number of delegators (stakers) for the current period (blockchain_period).
         validators_num:
           type: string
+          example: "297"
           description: The number of validators for the current period (blockchain_period).
 
     ValidatorCollectionItem:
@@ -866,6 +891,7 @@ security: []
 tags:
   - name: Blockchain
   - name: Validators
+  - name: Delegators
 
 
 externalDocs:
