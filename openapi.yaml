@@ -305,6 +305,11 @@ components:
         Blockchain collection item.
 
       type: object
+      example: [
+        { blockchain_name: Ethereum, ecosystem_name: "Ethereum ecosystem" },
+        { blockchain_name: Polkadot, ecosystem_name: "Polkadot ecosystem" },
+        { blockchain_name: Kusama, ecosystem_name: "Polkadot ecosystem" }
+      ]
       properties:
         blockchain_name:
           type: string
