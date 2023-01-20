@@ -522,36 +522,59 @@ components:
       properties:
         blockchain_name:
           type: string
+          example: "Polkadot"
           description: The name of the blockchain.
         ecosystem_name:
           type: string
+          example: "Polkadot ecosystem"
           description: The name of Ecosystem.
         blockchain_period_name:
           type: string
+          enum:
+            - era
+            - block
+            - epoch
+          example: "era"
           description: The name of period that rewards and other stat are collected by the API.
         blockchain_period_num:
           type: string
+          example: "946"
           description: |
             The value of blockchain_period
             (number in case of `era` `epoc` `block` and the day in case of point in time).
         datetime_from:
           type: string
+          example: "2023-01-04 15:36:18.014000"
           format: datetime
           description: The start of period (blockchain_period).
         datetime_to:
           type: string
+          example: "2023-01-05 15:36:18.011000"
           format: datetime
           description: The end of period (blockchain_period).
         blockchain_user_address:
           type: string
+          example: "13YoPoKBvLrZM1avJBUMQ9Ccd8uC7D4y8dWNYeeXqpQQGEYP"
           description: The public key of delegator.
         stake:
           type: array
+          example: [
+            {type: clients_stake, amount: "701.5", coingekoid: polkadot}
+          ]
           description: The array of different types (if there are different types) of delegator’s stake for period.
           items:
             $ref: '#/components/schemas/DelegatorStakeItem'
         rewards:
           type: array
+          example: [
+            {
+              type: client_reward,
+              amount: "0.34437678615378675",
+              coingekoid: polkadot,
+              period_payment_date: "2023-01-05 15:36:18.011000",
+              validator_address: "153YD8ZHD9dRh82U419bSCB5SzWhbdAFzjj4NtA5pMazR2yC"
+            }
+          ]
           description: The array of delegator’s rewards for this period.
           items:
             $ref: '#/components/schemas/DelegatorRewardsItem'
