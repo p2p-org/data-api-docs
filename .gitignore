@@ -1,0 +1,8 @@
+# IDE
+.idea/
+.DS_Store
+
+# docs
+_build
+_references
+_README.rst
