@@ -718,7 +718,7 @@ components:
       allOf:
         - type: object
           properties:
-            validatorReports:
+            delegatorReports:
               type: array
               items:
                 $ref: '#/components/schemas/DelegatorReportCollectionItem'
