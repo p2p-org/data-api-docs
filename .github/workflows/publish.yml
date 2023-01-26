@@ -1,0 +1,45 @@
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.19.0
+          cache: 'npm'
+      - run: yarn
+      - run: npm run build
+      - uses: actions/upload-artifact@v3
+        with:
+          name: static-content
+          path: |
+            static/stakingapi/doc/index.html
+            static/robots.txt
+            static/favicon.ico
+          retention-days: 1
+  publish:
+    runs-on: ubuntu-22.04
+    needs: build
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: static-content
+      - id: publish
+        uses: cloudflare/pages-action@v1.3.0
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: data-api-docs
+          directory: static
+      - name: Outputs
+        run: |
+          echo "ID: ${{ steps.publish.outputs.id }}"
+          echo "URL: ${{ steps.publish.outputs.url }}"
+          echo "Environment: ${{ steps.publish.outputs.environment }}"
+          echo "Alias: ${{ steps.publish.outputs.alias }}"
