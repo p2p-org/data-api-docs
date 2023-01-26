@@ -18,6 +18,8 @@ jobs:
           name: static-content
           path: |
             static/stakingapi/doc/index.html
+            static/robots.txt
+            static/favicon.ico
           retention-days: 1
   publish:
     runs-on: ubuntu-22.04
