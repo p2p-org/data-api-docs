@@ -120,15 +120,14 @@ info:
   contact:
     name: P2P Software
     url: https://p2p.org
-    email: dev@p2p.com
 
 servers:
-  - url: https://p2p.staking.api/
+  - url: https://staking-data-api-p2p.hasura.app/api/rest/
     description: Staking rewards API.
 
 paths:
   # Database entities
-  /blockchains/list:
+  /blockchains:
     get:
       summary: List blockchains
       description: |
@@ -208,7 +207,7 @@ paths:
         '500':
           $ref: '#/components/responses/Unknown'
 
-  /validators/list:
+  /validators:
     get:
       summary: List validators
       description: Get the list of active validators per period.
@@ -953,5 +952,5 @@ tags:
   - name: Delegators
 
 
-externalDocs:
-  url: https://p2p.staking.api/blockchains/
+#externalDocs:
+#  url: https://p2p.staking.api/blockchains/
