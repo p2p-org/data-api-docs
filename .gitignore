@@ -6,3 +6,6 @@
 _build
 _references
 _README.rst
+
+/node_modules/
+/static/
