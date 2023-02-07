@@ -75,15 +75,14 @@ info:
 
     For e.g., here is how to get blockchains list with [curl](https://p2p.staking.api/blockchains/list), when basic authorization is used:
     ```bash
-    curl -X PATCH 'https://p2p.staking.api/blockchains/list' \
+    curl -X GET 'https://staking-data-api-p2p.hasura.app/api/rest/blockchains' \
     -H 'Content-Type: application/json' \
-    --user "username:password" \
-    }'
+    -H 'x-hasura-admin-secret: secret' \
     ```
 
     # Authorization
 
-    Using [BasicAuth](https://en.wikipedia.org/wiki/Basic_access_authentication) to interact with API.
+    Using `API key` header to interact with API.
 
     Please request us for access.
 
