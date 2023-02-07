@@ -122,7 +122,7 @@ info:
     url: https://p2p.org
 
 servers:
-  - url: https://staking-data-api-p2p.hasura.app/api/rest/
+  - url: https://staking-data-api-p2p.hasura.app/api/rest
     description: Staking rewards API.
 
 paths:
