@@ -134,6 +134,8 @@ paths:
         You can use this info for API endpoints which consist of `blockchain_name` in parameters.
       operationId: getBlockchainsList
       tags: [Blockchain]
+#      security:
+#        - ApiKeyAuth: []
       responses:
         '200':
           description: Success.
@@ -930,12 +932,6 @@ components:
   # Reusable callbacks
   callbacks: {}
 
-#  securitySchemes:
-#    api_key:
-#      description: Api key
-#      type: apiKey
-#      name: x-hasura-admin-secret
-#      in: header
 
   securitySchemes:
     ApiKeyAuth:
