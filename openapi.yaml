@@ -186,10 +186,11 @@ paths:
       tags: [ Blockchain ]
       parameters:
         - $ref: '#/components/parameters/BlockchainName'
-        - $ref: '#/components/parameters/BlockchainPeriodName'
-        - $ref: '#/components/parameters/BlockchainPeriodNum'
+#        - $ref: '#/components/parameters/BlockchainPeriodName'
+#        - $ref: '#/components/parameters/BlockchainPeriodNum'
         - $ref: '#/components/parameters/FilterExecutionDateFrom'
         - $ref: '#/components/parameters/FilterExecutionDateTo'
+        - $ref: '#/components/parameters/PeriodCount'
       responses:
         '200':
           description: Success.
@@ -214,10 +215,11 @@ paths:
       tags: [ Validators ]
       parameters:
         - $ref: '#/components/parameters/BlockchainName'
-        - $ref: '#/components/parameters/BlockchainPeriodName'
-        - $ref: '#/components/parameters/BlockchainPeriodNum'
+#        - $ref: '#/components/parameters/BlockchainPeriodName'
+#        - $ref: '#/components/parameters/BlockchainPeriodNum'
         - $ref: '#/components/parameters/FilterExecutionDateFrom'
         - $ref: '#/components/parameters/FilterExecutionDateTo'
+        - $ref: '#/components/parameters/PeriodCount'
       responses:
         '200':
           description: Success.
@@ -244,10 +246,11 @@ paths:
       tags: [ Validators ]
       parameters:
         - $ref: '#/components/parameters/BlockchainName'
-        - $ref: '#/components/parameters/BlockchainPeriodName'
-        - $ref: '#/components/parameters/BlockchainPeriodNum'
+#        - $ref: '#/components/parameters/BlockchainPeriodName'
+#        - $ref: '#/components/parameters/BlockchainPeriodNum'
         - $ref: '#/components/parameters/FilterExecutionDateFrom'
         - $ref: '#/components/parameters/FilterExecutionDateTo'
+        - $ref: '#/components/parameters/PeriodCount'
         - $ref: '#/components/parameters/ValidatorAddress'
       responses:
         '200':
@@ -273,10 +276,11 @@ paths:
       tags: [ Delegators ]
       parameters:
         - $ref: '#/components/parameters/BlockchainName'
-        - $ref: '#/components/parameters/BlockchainPeriodName'
-        - $ref: '#/components/parameters/BlockchainPeriodNum'
+#        - $ref: '#/components/parameters/BlockchainPeriodName'
+#        - $ref: '#/components/parameters/BlockchainPeriodNum'
         - $ref: '#/components/parameters/FilterExecutionDateFrom'
         - $ref: '#/components/parameters/FilterExecutionDateTo'
+        - $ref: '#/components/parameters/PeriodCount'
         - $ref: '#/components/parameters/BlockchainUserAddress'
       responses:
         '200':
@@ -787,9 +791,19 @@ components:
       name: blockchain_name
       schema:
         type: string
-      required: false
+      required: true
       description: |
         The name of blockchain.
+
+    PeriodCount:
+      in: query
+      name: period_count
+      schema:
+        type: string
+        default: 100
+      required: false
+      description: |
+        The number of last periods for data mart.
 
     BlockchainPeriodName:
       in: query
@@ -821,7 +835,7 @@ components:
         items:
           type: string
       required: false
-      description: Comma-Separated validators public keys.
+      description: Validator public key.
 
     BlockchainUserAddress:
       in: query
@@ -831,7 +845,7 @@ components:
         items:
           type: string
       required: false
-      description: Comma-Separated delegator public keys.
+      description: Delegator public key.
 
     # Filters
     FilterExecutionDateFrom:
@@ -840,10 +854,10 @@ components:
       schema:
         type: string
         format: date-time
+        default: 2000-01-01 00:00:00
       required: false
       description: |
-        If `datetime_from` is not null but `datetime_to` is null you will get data for every `blockchain_period`
-        period that was started from `datetime_from` till current date.
+        The start date for query.
 
     FilterExecutionDateTo:
       in: query
@@ -851,10 +865,10 @@ components:
       schema:
         type: string
         format: date-time
+        default: 2100-01-01 00:00:00
       required: false
       description: |
-        If `datetime_to` is not null but `datetime_from` is null you will get data for every `blockchain_period`
-        period that was started from the first period till `datetime_to` value.
+        The finish date for query.
 
   # Reusable request bodies
   requestBodies: {}
