@@ -141,8 +141,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BlockchainCollection'
-        '400':
-          $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthenticated'
         '404':
@@ -167,8 +165,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BlockchainPeriodCollection'
-        '400':
-          $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthenticated'
         '404':
@@ -196,8 +192,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BlockchainReportCollection'
-        '400':
-          $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthenticated'
         '404':
@@ -223,8 +217,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ValidatorCollection'
-        '400':
-          $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthenticated'
         '404':
@@ -253,8 +245,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ValidatorReportCollection'
-        '400':
-          $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthenticated'
         '404':
@@ -283,8 +273,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DelegatorReportCollection'
-        '400':
-          $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthenticated'
         '404':
@@ -719,20 +707,67 @@ components:
               items:
                 $ref: '#/components/schemas/DelegatorReportCollectionItem'
 
-    # Generic
-    Error:
+    # Error response
+    401ErrorCode:
       description: |
         [RFC7807](https://tools.ietf.org/html/rfc7807) compliant response.
       type: object
       properties:
         code:
           type: string
+          example: 'access-denied'
           description: A short, human-readable summary of the problem type.
         error:
           type: string
+          example: 'invalid x-hasura-admin-secret/x-hasura-access-key'
           description: A human-readable explanation specific to this occurrence of the problem.
         path:
           type: string
+          example: '$'
+          description: The full path to the result field where the error was raised.
+      required:
+        - code
+        - error
+        - path
+
+    404ErrorCode:
+      description: |
+        [RFC7807](https://tools.ietf.org/html/rfc7807) compliant response.
+      type: object
+      properties:
+        code:
+          type: string
+          example: 'not-found'
+          description: A short, human-readable summary of the problem type.
+        error:
+          type: string
+          example: 'Endpoint not found'
+          description: A human-readable explanation specific to this occurrence of the problem.
+        path:
+          type: string
+          example: '$'
+          description: The full path to the result field where the error was raised.
+      required:
+        - code
+        - error
+        - path
+
+    500ErrorCode:
+      description: |
+        [RFC7807](https://tools.ietf.org/html/rfc7807) compliant response.
+      type: object
+      properties:
+        code:
+          type: string
+          example: 'error'
+          description: A short, human-readable summary of the problem type.
+        error:
+          type: string
+          example: 'Unknown server error'
+          description: A human-readable explanation specific to this occurrence of the problem.
+        path:
+          type: string
+          example: '$'
           description: The full path to the result field where the error was raised.
       required:
         - code
@@ -854,62 +889,27 @@ components:
 
   # Reusable responses, such as 401 Unauthenticated or 400 Bad Request
   responses:
-    # 400
-    'BadRequest':
-      description: Client specified an invalid argument.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     # 401
     'Unauthenticated':
       description: Request not authenticated due to missing, invalid, authentication info.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
-    # 403
-    'PermissionDenied':
-      description: Client does not have sufficient permission.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '#/components/schemas/401ErrorCode'
     # 404
     'NotFound':
       description: A specified resource is not found.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
-    # 405
-    'MethodNotAllowed':
-      description: Request method is known by the server but is not supported by the target resource.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    # 406
-    'NotAcceptable':
-      description: A specified Accept header is not allowed.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    # 409
-    'AlreadyExists':
-      description: An existing resource conflicts with the request.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '#/components/schemas/404ErrorCode'
     # 500
     'Unknown':
       description: Unknown server error.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '#/components/schemas/500ErrorCode'
 
   # Reusable response headers
   headers: {}
