@@ -186,8 +186,6 @@ paths:
       tags: [ Blockchain ]
       parameters:
         - $ref: '#/components/parameters/BlockchainName'
-#        - $ref: '#/components/parameters/BlockchainPeriodName'
-#        - $ref: '#/components/parameters/BlockchainPeriodNum'
         - $ref: '#/components/parameters/FilterExecutionDateFrom'
         - $ref: '#/components/parameters/FilterExecutionDateTo'
         - $ref: '#/components/parameters/PeriodCount'
@@ -215,8 +213,6 @@ paths:
       tags: [ Validators ]
       parameters:
         - $ref: '#/components/parameters/BlockchainName'
-#        - $ref: '#/components/parameters/BlockchainPeriodName'
-#        - $ref: '#/components/parameters/BlockchainPeriodNum'
         - $ref: '#/components/parameters/FilterExecutionDateFrom'
         - $ref: '#/components/parameters/FilterExecutionDateTo'
         - $ref: '#/components/parameters/PeriodCount'
@@ -246,8 +242,6 @@ paths:
       tags: [ Validators ]
       parameters:
         - $ref: '#/components/parameters/BlockchainName'
-#        - $ref: '#/components/parameters/BlockchainPeriodName'
-#        - $ref: '#/components/parameters/BlockchainPeriodNum'
         - $ref: '#/components/parameters/FilterExecutionDateFrom'
         - $ref: '#/components/parameters/FilterExecutionDateTo'
         - $ref: '#/components/parameters/PeriodCount'
@@ -829,21 +823,17 @@ components:
 
     ValidatorAddress:
       in: query
-      name: validator_address[]
+      name: validator_address
       schema:
-        type: array
-        items:
-          type: string
+        type: string
       required: false
       description: Validator public key.
 
     BlockchainUserAddress:
       in: query
-      name: blockchain_user_address[]
+      name: blockchain_user_address
       schema:
-        type: array
-        items:
-          type: string
+        type: string
       required: false
       description: Delegator public key.
 
