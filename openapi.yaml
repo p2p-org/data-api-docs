@@ -36,35 +36,6 @@ info:
     Accept: application/json
     ```
 
-    ## Operations
-
-    The platform supports **R**ead, operation on most resources.
-    You can review the standards for these operations and their standard parameters below.
-
-    Some endpoints have special behavior as exceptions.
-
-    ### Read
-
-    The HTTP `GET` request can be used to read a resource or to list a number of resources.
-
-    A resource's `id` can be submitted in the request parameters to read a specific resource.
-    The response usually returns a `200 OK` response code upon success, with the resource's metadata in
-    the response body.
-
-    If a `GET` request does not include a specific resource `id`, it is treated as a list request.
-    The response usually returns a `200 OK` response code upon success, with an object containing a list
-    of resources' metadata in the response body.
-
-    When reading resources, some common query parameters are usually available. e.g.:
-    ```
-    /list?limit=25&offset=25
-    ```
-
-    |Query Parameter|Type|Description|
-    |---------------|----|-----------|
-    |limit|integer|Maximum number of objects to fetch.|
-    |offset|integer|Offset after which to start returning objects. For use with limit query parameter.|
-
     # Trying the API
 
     You can use a third party client, such as [curl](https://curl.haxx.se/), [HTTPie](https://httpie.org/),
@@ -97,11 +68,11 @@ info:
     This indicates that the client request has not been completed because
     it lacks valid authentication credentials for the requested resource. Please check that you have valid credentials.
 
-    ## BadRequest
-
-    This response means that the server cannot or will not process the request due to something
-    that is perceived to be a client error (e.g., malformed request syntax, invalid request message
-    framing, or deceptive request routing). To resolve this, please ensure that your syntax is correct.
+#    ## BadRequest
+#
+#    This response means that the server cannot or will not process the request due to something
+#    that is perceived to be a client error (e.g., malformed request syntax, invalid request message
+#    framing, or deceptive request routing). To resolve this, please ensure that your syntax is correct.
 
     ## NotFound
 
