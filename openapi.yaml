@@ -68,12 +68,6 @@ info:
     This indicates that the client request has not been completed because
     it lacks valid authentication credentials for the requested resource. Please check that you have valid credentials.
 
-#    ## BadRequest
-#
-#    This response means that the server cannot or will not process the request due to something
-#    that is perceived to be a client error (e.g., malformed request syntax, invalid request message
-#    framing, or deceptive request routing). To resolve this, please ensure that your syntax is correct.
-
     ## NotFound
 
     This client error response indicates that the server cannot find the requested resource.
