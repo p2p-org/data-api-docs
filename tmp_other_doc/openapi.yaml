@@ -1,0 +1,624 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+---
+openapi: 3.0.3
+
+info:
+  title: |
+    Gear MVP API.
+
+    This doc describes how you can get test data about smart contracts and accounts in Gear network.
+  description: |
+    # Overview
+    
+    This section provides an overview of the API design, methods, and supported use cases.
+
+    Most of the endpoints accept `JSON` as input and return `JSON` responses.
+    This means that you must usually add the following headers to your request:
+    ```
+    Content-type: application/json
+    Accept: application/json
+    ```
+
+    # Trying the API
+
+    You can use a third party client, such as [curl](https://curl.haxx.se/), [HTTPie](https://httpie.org/),
+    [Postman](https://www.postman.com/) or [the Insomnia rest client](https://insomnia.rest/) to test
+    the Gear API.
+
+    Note that you will need to pass credentials data.
+
+    For e.g., here is how to get blockchains list with [curl](https://p2p.staking.api/blockchains/list), when basic authorization is used:
+    ```bash
+    curl -X GET 'https://p2p.staking.api.gear.hasura.app/api/rest/blockchains' \
+    -H 'Content-Type: application/json' \
+    -H 'x-hasura-admin-secret: secret' \
+    ```
+
+    # Authorization
+
+    Using `API key` header to interact with API.
+
+    Please request us for access.
+
+    # Errors
+
+    We follow the error response format proposed in [RFC 7807](https://tools.ietf.org/html/rfc7807)
+    also known as Problem Details for HTTP APIs. As with our normal API responses,
+    your client must be prepared to gracefully handle additional members of the response.
+
+    ## Unauthorized
+
+    This indicates that the client request has not been completed because
+    it lacks valid authentication credentials for the requested resource. Please check that you have valid credentials.
+
+    ## NotFound
+
+    This client error response indicates that the server cannot find the requested resource.
+
+    ## Unknown (Internal Server Error)
+
+    This means that the server encountered an unexpected condition that prevented it from
+    fulfilling the request.
+
+  version: '0.1'
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  contact:
+    name: P2P Software
+    url: https://p2p.org
+
+servers:
+  - url: https://p2p.staking.api/gear
+    description: Gear API.
+
+paths:
+  # Database entities
+  /accounts:
+    get:
+      summary: Get accounts info
+      description: |
+        Method returns the list of blockchains users in Gear.
+      operationId: getAccountsInfo
+      tags: [Accounts]
+      parameters:
+        - $ref: '#/components/parameters/BlockchainUserId'
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountsCollection'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/Unknown'
+
+  /smart-contracts:
+    get:
+      summary: Get smart contracts info
+      description: Method returns the information about smart contracts in Gear.
+      operationId: getSmartContractInfo
+      tags: [SmartContracts]
+      parameters:
+        - $ref: '#/components/parameters/SmartContractId'
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SmartContractCollection'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/Unknown'
+
+  /smart-contracts/messages:
+    get:
+      summary: Get smart contract messages
+      description: Method returns the messages between blockchain users and smart contracts.
+      operationId: getSmartContractMessages
+      tags: [SmartContracts]
+      parameters:
+        - $ref: '#/components/parameters/SmartContractId'
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SmartContractMsgCollection'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/Unknown'
+
+  /extrinsic:
+    get:
+      summary: Get extrinsic info
+      description: Method returns the information about extrinsic in Gear.
+      operationId: getExtrinsicInfo
+      tags: [Extrinsics]
+      parameters:
+        - $ref: '#/components/parameters/ExtrinsicId'
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExtrinsicCollection'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/Unknown'
+
+components:
+  # Reusable schemas (data models)
+  schemas:
+    # Database entities
+    AccountsCollectionItem:
+      description: >
+        Accounts collection item.
+
+      type: object
+      example: [
+        {
+          "blockchain_user_id": "5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y",
+          "blockchain_id": "137",
+          "blockchain_name": "gear",
+          "created_at_block_id": "2023-01-04 15:36:18.014000",
+          "killed_at_block_id": null,
+          "registrar_index": null,
+          "blake2_hash": "b0edae20838083f2cde1c4080db8cf8090b5ab205c6974c9ea841be688864633dc9ca8a357843eeacf2314649965fe22"
+        }
+      ]
+      properties:
+        blockchain_user_id:
+          type: string
+          description: Public key of blockchain account (user).
+        blockchain_id:
+          type: string
+          description: Unique id of network.
+        blockchain_name:
+          type: string
+          description: The name of blockchain.
+        created_at_block_id:
+          type: string
+          description: The data of public key’s creation.
+        killed_at_block_id:
+          type: string
+          description: The data of non-activation for user.
+        judgement_status:
+          type: string
+          description: Status of penalties for user.
+        registrar_index:
+          type: string
+          description: --
+        blake2_hash:
+          type: string
+          description: --
+
+    SmartContractCollectionItem:
+      description: >
+        SmartContract collection item.
+
+      type: object
+      example: [
+        {
+          "smart_contract_id": "0x19de28b74877b9312b77b74fcaa5bd90a1c214723015b202bc4bf9817ff21296",
+          "blockchain_id": "137",
+          "blockchain_name": "gear",
+          "deploy_extrinsic_id": "65-1",
+          "deploy_block_id": "65",
+          "deploy_gas_limit": "2,540,770,760",
+          "author_blockchain_user_id": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+          "init_payload": "0x10474e465410474e46545068747470733a2f2f676561722d746563682e696f00",
+          "code": "..."
+        }
+      ]
+      properties:
+        smart_contract_id:
+          type: string
+          description: Public key of smart contract.
+        blockchain_id:
+          type: string
+          description: Unique id of network.
+        blockchain_name:
+          type: string
+          description: The name of blockchain.
+        deploy_extrinsic_id:
+          type: string
+          description: Id of extrinsic for deploying of smart contracts.
+        deploy_block_id:
+          type: string
+          description: Id of block for deploying of smart contracts.
+        deploy_gas_limit:
+          type: string
+          description: The gas limit for deploying of smart contracts.
+        author_blockchain_user_id:
+          type: string
+          description: Public key of author’s blockchain account (user).
+        init_payload:
+          type: string
+          description: --
+        code:
+          type: string
+          description: --
+
+    SmartContractMsgCollectionItem:
+      description: >
+        SmartContract messages collection item.
+
+      type: object
+      example: [
+        {
+          "smart_contract_id": "0x03d9cdceabcde8c14d4ea73d1a8970ca014c0350198b89b238c1d21854f98e50",
+          "blockchain_id": "137",
+          "blockchain_name": "gear",
+          "extrinsic_id": "91-1",
+          "block_id": "91",
+          "blockchain_user_id": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
+          "gas_limit": "1,679,686,400",
+          "payload": "0x00000000000000000000000000",
+          "value": "0"
+        }
+      ]
+      properties:
+        smart_contract_id:
+          type: string
+          description: Public key of smart contract.
+        blockchain_id:
+          type: string
+          description: Unique id of network.
+        blockchain_name:
+          type: string
+          description: The name of blockchain.
+        extrinsic_id:
+          type: string
+          description: The extrinsic id of message.
+        block_id:
+          type: string
+          description: Id of block.
+        blockchain_user_id:
+          type: string
+          description: Public key of message’s sender.
+        gas_limit:
+          type: string
+          description: Gas limit for extrinsic.
+        payload:
+          type: string
+          description: --
+        value:
+          type: string
+          description: --
+
+    ExtrinsicCollectionItem:
+      description: >
+        Extrinsic messages collection item.
+
+      type: object
+      example: [
+        {
+          "extrinsic_id": "65-1",
+          "blockchain_id": "137",
+          "blockchain_name": "gear",
+          "parent_id": null,
+          "block_id": "65",
+          "section": "gear",
+          "method": "uploadProgram",
+          "mortal_period": "512",
+          "mortal_phase": "61",
+          "is_success": true,
+          "is_signed": true,
+          "signer": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+          "tip": "0",
+          "nonce": "1",
+          "event_id": [ 65-1,65-2,65-3,65-4,65-5,65-6,65-7 ]
+        }
+      ]
+      properties:
+        extrinsic_id:
+          type: string
+          description: Id of extrinsic.
+        blockchain_id:
+          type: string
+          description: Unique id of network.
+        blockchain_name:
+          type: string
+          description: The name of blockchain.
+        parent_id:
+          type: string
+          description: Id of parent extrinsic.
+        block_id:
+          type: string
+          description: Id of block.
+        section:
+          type: string
+          description: Section for extrinsic calling.
+        method:
+          type: string
+          description: Method for extrinsic calling.
+        mortal_period:
+          type: string
+          description: --
+        mortal_phase:
+          type: string
+          description: --
+        is_success:
+          type: string
+          description: Is succeed status of extrinsic.
+        is_signed:
+          type: string
+          description: Is signed extrinsic.
+        signer:
+          type: string
+          description: Public key of signer.
+        tip:
+          type: string
+          description: Tips for extrinsic.
+        nonce:
+          type: string
+          description: Nonce of extrinsic.
+        event_id:
+          type: array
+          description: The list of events that were called by extrinsic.
+          items:
+            type: string
+
+    AccountsCollection:
+      type: object
+      description: |
+        Collection of accounts.
+      allOf:
+        - type: object
+          properties:
+            accounts:
+              type: array
+              items:
+                $ref: '#/components/schemas/AccountsCollectionItem'
+
+    SmartContractCollection:
+      type: object
+      description: |
+        Collection of smart contracts.
+      allOf:
+        - type: object
+          properties:
+            smart_contracts:
+              type: array
+              items:
+                $ref: '#/components/schemas/SmartContractCollectionItem'
+
+    SmartContractMsgCollection:
+      type: object
+      description: |
+        Collection of smart contracts messages.
+      allOf:
+        - type: object
+          properties:
+            messages:
+              type: array
+              items:
+                $ref: '#/components/schemas/SmartContractMsgCollectionItem'
+
+    ExtrinsicCollection:
+      type: object
+      description: |
+        Collection of extrinsics.
+      allOf:
+        - type: object
+          properties:
+            messages:
+              type: array
+              items:
+                $ref: '#/components/schemas/ExtrinsicCollectionItem'
+
+    # Error response
+    401ErrorCode:
+      description: |
+        [RFC7807](https://tools.ietf.org/html/rfc7807) compliant response.
+      type: object
+      properties:
+        code:
+          type: string
+          example: 'access-denied'
+          description: A short, human-readable summary of the problem type.
+        error:
+          type: string
+          example: 'invalid x-hasura-admin-secret/x-hasura-access-key'
+          description: A human-readable explanation specific to this occurrence of the problem.
+        path:
+          type: string
+          example: '$'
+          description: The full path to the result field where the error was raised.
+      required:
+        - code
+        - error
+        - path
+
+    404ErrorCode:
+      description: |
+        [RFC7807](https://tools.ietf.org/html/rfc7807) compliant response.
+      type: object
+      properties:
+        code:
+          type: string
+          example: 'not-found'
+          description: A short, human-readable summary of the problem type.
+        error:
+          type: string
+          example: 'Endpoint not found'
+          description: A human-readable explanation specific to this occurrence of the problem.
+        path:
+          type: string
+          example: '$'
+          description: The full path to the result field where the error was raised.
+      required:
+        - code
+        - error
+        - path
+
+    500ErrorCode:
+      description: |
+        [RFC7807](https://tools.ietf.org/html/rfc7807) compliant response.
+      type: object
+      properties:
+        code:
+          type: string
+          example: 'error'
+          description: A short, human-readable summary of the problem type.
+        error:
+          type: string
+          example: 'Unknown server error'
+          description: A human-readable explanation specific to this occurrence of the problem.
+        path:
+          type: string
+          example: '$'
+          description: The full path to the result field where the error was raised.
+      required:
+        - code
+        - error
+        - path
+
+    CollectionInfo:
+      description: Metadata about collection.
+      type: object
+      properties:
+        total_entries:
+          type: integer
+          description: Count of objects in the current result set.
+
+  # Reusable path, query, header and cookie parameters
+  parameters:
+    # Database entity fields
+    BlockchainUserId:
+      in: query
+      name: blockchain_user_id
+      schema:
+        type: string
+      required: false
+      description: |
+        Public key of blockchain account (user).
+
+    SmartContractId:
+      in: query
+      name: smart_contract_id
+      schema:
+        type: string
+      required: false
+      description: |
+        Public key of smart contract.
+
+    ExtrinsicId:
+      in: query
+      name: extrinsic_id
+      schema:
+        type: string
+      required: false
+      description: |
+        Id of extrinsic.
+
+    # Filters
+    FilterExecutionDateFrom:
+      in: query
+      name: datetime_from
+      schema:
+        type: string
+        format: date-time
+        default: 2000-01-01 00:00:00
+      required: false
+      description: |
+        The start date for query.
+
+    FilterExecutionDateTo:
+      in: query
+      name: datetime_to
+      schema:
+        type: string
+        format: date-time
+        default: 2100-01-01 00:00:00
+      required: false
+      description: |
+        The finish date for query.
+
+  # Reusable request bodies
+  requestBodies: {}
+
+  # Reusable responses, such as 401 Unauthenticated or 400 Bad Request
+  responses:
+    # 401
+    'Unauthenticated':
+      description: Request not authenticated due to missing, invalid, authentication info.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/401ErrorCode'
+    # 404
+    'NotFound':
+      description: A specified resource is not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/404ErrorCode'
+    # 500
+    'Unknown':
+      description: Unknown server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/500ErrorCode'
+
+  # Reusable response headers
+  headers: {}
+
+  # Reusable examples
+  examples: {}
+
+  # Reusable links
+  links: {}
+
+  # Reusable callbacks
+  callbacks: {}
+
+
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-hasura-admin-secret
+
+# The API will provide support for plugins to support various authorization mechanisms.
+# Detailed information will be available in the plugin specification.
+security:
+  - ApiKeyAuth: []
+
+tags:
+  - name: Accounts
+  - name: SmartContracts
+  - name: Extrinsics
