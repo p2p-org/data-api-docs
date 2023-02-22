@@ -84,7 +84,7 @@ info:
     url: https://p2p.org
 
 servers:
-  - url: https://p2p.staking.api/gear
+  - url: https://gear-staking-api-p2p.hasura.app/api/rest
     description: Gear API.
 
 paths:
