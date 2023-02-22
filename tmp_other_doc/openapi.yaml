@@ -89,11 +89,32 @@ servers:
 
 paths:
   # Database entities
+  /accounts:
+    get:
+      summary: Get accounts list
+      description: |
+        Method returns info on particular account.
+      operationId: getListAccountsInfo
+      tags: [ Accounts ]
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountsListCollection'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/Unknown'
+
   /accounts/{blockchain_user_id}:
     get:
-      summary: Get accounts info
+      summary: Get account
       description: |
-        Method returns the list of blockchains users in Gear.
+        Method returns a list of blockchain account in Gear.
       operationId: getAccountsInfo
       tags: [Accounts]
       parameters:
@@ -112,10 +133,30 @@ paths:
         '500':
           $ref: '#/components/responses/Unknown'
 
+  /smartcontracts:
+    get:
+      summary: Get smart contracts list
+      description: Method returns a list of smart contracts in Gear.
+      operationId: getListSmartContractInfo
+      tags: [ SmartContracts ]
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListSmartContractCollection'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/Unknown'
+
   /smartcontracts/{smart_contract_id}:
     get:
-      summary: Get smart contracts info
-      description: Method returns the information about smart contracts in Gear.
+      summary: Get smart contract
+      description: Method returns info on particular smart contract.
       operationId: getSmartContractInfo
       tags: [SmartContracts]
       parameters:
@@ -137,7 +178,7 @@ paths:
   /smartcontracts/{smart_contract_id}/messages:
     get:
       summary: Get smart contract messages
-      description: Method returns the messages between blockchain users and smart contracts.
+      description: Method returns messages between blockchain users and smart contracts.
       operationId: getSmartContractMessages
       tags: [SmartContracts]
       parameters:
@@ -156,10 +197,30 @@ paths:
         '500':
           $ref: '#/components/responses/Unknown'
 
+  /extrinsic:
+    get:
+      summary: Get extrinsics list
+      description: Method returns a list of extrinsic in Gear.
+      operationId: getListExtrinsicInfo
+      tags: [ Extrinsics ]
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListExtrinsicCollection'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/Unknown'
+
   /extrinsic/{extrinsic_id}:
     get:
-      summary: Get extrinsic info
-      description: Method returns the information about extrinsic in Gear.
+      summary: Get extrinsic
+      description: Method returns info on particular extrinsic.
       operationId: getExtrinsicInfo
       tags: [Extrinsics]
       parameters:
@@ -178,10 +239,30 @@ paths:
         '500':
           $ref: '#/components/responses/Unknown'
 
+  /events:
+    get:
+      summary: Get events list
+      description: Method returns the information about events in Gear.
+      operationId: getListEventInfo
+      tags: [ Events ]
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListEventCollection'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/Unknown'
+
   /events/{event_id}:
     get:
-      summary: Get events info
-      description: Method returns the information about events in Gear.
+      summary: Get event
+      description: Method returns the information for particular events in Gear.
       operationId: getEventInfo
       tags: [Events]
       parameters:
@@ -508,6 +589,40 @@ components:
               items:
                 $ref: '#/components/schemas/AccountsCollectionItem'
 
+    AccountsListCollection:
+      type: object
+      description: |
+        Collection of accounts.
+      allOf:
+        - type: object
+          properties:
+            accounts:
+              type: array
+              items:
+                $ref: '#/components/schemas/AccountsCollectionItem'
+              example: [
+                {
+                  'blockchain_user_id': '5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y',
+                  'blockchain_id': '137',
+                  'blockchain_name': 'gear',
+                  'created_at_block_id': '61',
+                  'killed_at_block_id': null,
+                  'judgement_status': null,
+                  'blake2_hash': 'b0edae20838083f2cde1c4080db8cf8090b5ab205c6974c9ea841be688864633dc9ca8a357843eeacf2314649965fe22',
+                  'registrar_index': null
+                },
+                {
+                  'blockchain_user_id': '5рhgkpogC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y',
+                  'blockchain_id': '137',
+                  'blockchain_name': 'gear',
+                  'created_at_block_id': '60',
+                  'killed_at_block_id': null,
+                  'judgement_status': null,
+                  'blake2_hash': '974c9ea841be688864633dc9ca8ab0edae20838083f2cde1c4080db8cf8090b5ab205c6357843eeacf2314649965fe22',
+                  'registrar_index': null
+                }
+      ]
+
     SmartContractCollection:
       type: object
       description: |
@@ -519,6 +634,42 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/SmartContractCollectionItem'
+
+    ListSmartContractCollection:
+      type: object
+      description: |
+        Collection of smart contracts.
+      allOf:
+        - type: object
+          properties:
+            smart_contracts:
+              type: array
+              items:
+                $ref: '#/components/schemas/SmartContractCollectionItem'
+              example: [
+                {
+                  "smart_contract_id": "0x19de28b74877b9312b77b74fcaa5bd90a1c214723015b202bc4bf9817ff21296",
+                  "blockchain_id": "137",
+                  "blockchain_name": "gear",
+                  "deploy_extrinsic_id": "65-1",
+                  "deploy_block_id": "65",
+                  "deploy_gas_limit": "2,540,770,760",
+                  "author_blockchain_user_id": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+                  "init_payload": "0x10474e465410474e46545068747470733a2f2f676561722d746563682e696f00",
+                  "code": "..."
+                },
+                {
+                  "smart_contract_id": "0x214723015b202bc4bf9817ff2129619de28b74877b9312b77b74fcaa5bd90a1c",
+                  "blockchain_id": "137",
+                  "blockchain_name": "gear",
+                  "deploy_extrinsic_id": "65-2",
+                  "deploy_block_id": "64",
+                  "deploy_gas_limit": "3,140,770,999",
+                  "author_blockchain_user_id": "DWS57CtERHpNehXCPcNoHGKutQY5GrwvaEF5zXb26Fz9rcQp",
+                  "init_payload": "0x733a2f2f676561722d746563682e696f0010474e465410474e46545068747470",
+                  "code": "..."
+                }
+      ]
 
     SmartContractMsgCollection:
       type: object
@@ -544,6 +695,54 @@ components:
               items:
                 $ref: '#/components/schemas/ExtrinsicCollectionItem'
 
+    ListExtrinsicCollection:
+      type: object
+      description: |
+        Collection of extrinsics.
+      allOf:
+        - type: object
+          properties:
+            extrinsics:
+              type: array
+              items:
+                $ref: '#/components/schemas/ExtrinsicCollectionItem'
+              example: [
+                { 'block_id': '30',
+                  'blockchain_id': '137',
+                  'blockchain_name': 'gear',
+                  'extrinsic_id': '30-1',
+                  'is_signed': False,
+                  'is_success': True,
+                  'method': 'run',
+                  'mortal_period': null,
+                  'mortal_phase': null,
+                  'nonce': '0.0',
+                  'parent_id': null,
+                  'section': 'gear',
+                  'signer': null,
+                  'tip': '0',
+                  'decoded_extrinsic': '{"args": {}, "method": "run", "section": "gear"}',
+                  'events': [ { 'event_id': '30-1' } ]
+                },
+                { 'block_id': '29',
+                  'blockchain_id': '137',
+                  'blockchain_name': 'gear',
+                  'extrinsic_id': '30-2',
+                  'is_signed': False,
+                  'is_success': True,
+                  'method': 'run',
+                  'mortal_period': null,
+                  'mortal_phase': null,
+                  'nonce': '0.0',
+                  'parent_id': null,
+                  'section': 'gear',
+                  'signer': null,
+                  'tip': '0',
+                  'decoded_extrinsic': '{"args": {}, "method": "run", "section": "gear"}',
+                  'events': [ { 'event_id': '30-2' } ]
+                }
+              ]
+
     EventCollection:
       type: object
       description: |
@@ -555,6 +754,38 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/EventCollectionItem'
+
+    ListEventCollection:
+      type: object
+      description: |
+        Collection of events.
+      allOf:
+        - type: object
+          properties:
+            events:
+              type: array
+              items:
+                $ref: '#/components/schemas/EventCollectionItem'
+              example: [
+                {
+                  'block_id': '70',
+                  'blockchain_id': '137',
+                  'blockchain_name': 'gear',
+                  'decoded_event': '{"data": ["5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY", 1169968249000], "index": "0x0507"}',
+                  'event_id': '70-4',
+                  'method': 'Deposit',
+                  'section': 'balances'
+                },
+                {
+                  'block_id': '69',
+                  'blockchain_id': '137',
+                  'blockchain_name': 'gear',
+                  'decoded_event': '{"data": ["7CtERHpNehXCPcNoHGKutQY5GrwvaEF5zXb26Fz9rcQpDWS5", 2490001169968], "index": "0x0507"}',
+                  'event_id': '70-3',
+                  'method': 'Deposit',
+                  'section': 'balances'
+                }
+              ]
 
     # Error response
     401ErrorCode:
@@ -639,7 +870,7 @@ components:
       name: blockchain_user_id
       schema:
         type: string
-      required: false
+      required: true
       description: |
         Public key of blockchain account (user).
 
@@ -648,7 +879,7 @@ components:
       name: smart_contract_id
       schema:
         type: string
-      required: false
+      required: true
       description: |
         Public key of smart contract.
 
@@ -666,7 +897,7 @@ components:
       name: extrinsic_id
       schema:
         type: string
-      required: false
+      required: true
       description: |
         Id of extrinsic.
 
@@ -675,7 +906,7 @@ components:
       name: event_id
       schema:
         type: string
-      required: false
+      required: true
       description: |
         Id of event.
 
