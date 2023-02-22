@@ -89,7 +89,7 @@ servers:
 
 paths:
   # Database entities
-  /accounts:
+  /accounts/{blockchain_user_id}:
     get:
       summary: Get accounts info
       description: |
@@ -112,14 +112,14 @@ paths:
         '500':
           $ref: '#/components/responses/Unknown'
 
-  /smartcontracts:
+  /smartcontracts/{smart_contract_id}:
     get:
       summary: Get smart contracts info
       description: Method returns the information about smart contracts in Gear.
       operationId: getSmartContractInfo
       tags: [SmartContracts]
       parameters:
-        - $ref: '#/components/parameters/SmartContractId'
+        - $ref: '#/components/parameters/SmartContractIdInfo'
       responses:
         '200':
           description: Success.
@@ -134,14 +134,14 @@ paths:
         '500':
           $ref: '#/components/responses/Unknown'
 
-  /smartcontracts/messages:
+  /smartcontracts/{smart_contract_id}/messages:
     get:
       summary: Get smart contract messages
       description: Method returns the messages between blockchain users and smart contracts.
       operationId: getSmartContractMessages
       tags: [SmartContracts]
       parameters:
-        - $ref: '#/components/parameters/SmartContractId'
+        - $ref: '#/components/parameters/SmartContractIdMessage'
       responses:
         '200':
           description: Success.
@@ -156,7 +156,7 @@ paths:
         '500':
           $ref: '#/components/responses/Unknown'
 
-  /extrinsic:
+  /extrinsic/{extrinsic_id}:
     get:
       summary: Get extrinsic info
       description: Method returns the information about extrinsic in Gear.
@@ -178,6 +178,28 @@ paths:
         '500':
           $ref: '#/components/responses/Unknown'
 
+  /events/{event_id}:
+    get:
+      summary: Get events info
+      description: Method returns the information about events in Gear.
+      operationId: getEventInfo
+      tags: [Events]
+      parameters:
+        - $ref: '#/components/parameters/EventId'
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventCollection'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/Unknown'
+
 components:
   # Reusable schemas (data models)
   schemas:
@@ -189,13 +211,14 @@ components:
       type: object
       example: [
         {
-          "blockchain_user_id": "5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y",
-          "blockchain_id": "137",
-          "blockchain_name": "gear",
-          "created_at_block_id": "2023-01-04 15:36:18.014000",
-          "killed_at_block_id": null,
-          "registrar_index": null,
-          "blake2_hash": "b0edae20838083f2cde1c4080db8cf8090b5ab205c6974c9ea841be688864633dc9ca8a357843eeacf2314649965fe22"
+          'blockchain_user_id': '5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y',
+          'blockchain_id': '137',
+          'blockchain_name': 'gear',
+          'created_at_block_id': '61',
+          'killed_at_block_id': null,
+          'judgement_status': null,
+          'blake2_hash': 'b0edae20838083f2cde1c4080db8cf8090b5ab205c6974c9ea841be688864633dc9ca8a357843eeacf2314649965fe22',
+          'registrar_index': null
         }
       ]
       properties:
@@ -219,7 +242,7 @@ components:
           description: Status of penalties for user.
         registrar_index:
           type: string
-          description: --
+          description: Id of registrar (entity that provided identity).
         blake2_hash:
           type: string
           description: --
@@ -278,15 +301,25 @@ components:
       type: object
       example: [
         {
-          "smart_contract_id": "0x03d9cdceabcde8c14d4ea73d1a8970ca014c0350198b89b238c1d21854f98e50",
-          "blockchain_id": "137",
-          "blockchain_name": "gear",
-          "extrinsic_id": "91-1",
-          "block_id": "91",
-          "blockchain_user_id": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
-          "gas_limit": "1,679,686,400",
-          "payload": "0x00000000000000000000000000",
-          "value": "0"
+          'block_id': '91',
+          'blockchain_id': '137',
+          'blockchain_name': 'gear',
+          'blockchain_user_id': '5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty',
+          'extrinsic_id': '91-1',
+          'gas_limit': '1,679,686,400',
+          'payload': '0x00000000000000000000000000',
+          'smart_contract_id': '0x03d9cdceabcde8c14d4ea73d1a8970ca014c0350198b89b238c1d21854f98e50',
+          'value': '0',
+          'action': 'mint',
+          'approve_to': '',
+          'auction_bidPeriod': '',
+          'auction_duration': '',
+          'auction_minPrice': '',
+          'nft_contract_id': '',
+          'price': '',
+          'payload_decoded': '{"mint": {"tokenMetadata": {"name": "", "media": "", "reference": "", "description": ""}, "transactionId": 0}}',
+          'tokenId': '',
+          'transaction_id': '0'
         }
       ]
       properties:
@@ -317,6 +350,36 @@ components:
         value:
           type: string
           description: --
+        payload_decoded:
+          type: string
+          description: --
+        action:
+          type: string
+          description: --
+        nft_contract_id:
+          type: string
+          description: NFT address for several actions with NFT-specific SM.
+        price:
+          type: string
+          description: Price for several actions with NFT-specific SM.
+        tokenId:
+          type: string
+          description: Token id for user’s message.
+        approve_to:
+          type: string
+          description: Address for `approve` type of action.
+        transaction_id:
+          type: string
+          description: Id of transaction.
+        auction_duration:
+          type: string
+          description: Duration of auction for createAuction action.
+        auction_minPrice:
+          type: string
+          description: Minimal price of auction for createAuction action.
+        auction_bidPeriod:
+          type: string
+          description: Period of auction for createAuction action.
 
     ExtrinsicCollectionItem:
       description: >
@@ -324,22 +387,22 @@ components:
 
       type: object
       example: [
-        {
-          "extrinsic_id": "65-1",
-          "blockchain_id": "137",
-          "blockchain_name": "gear",
-          "parent_id": null,
-          "block_id": "65",
-          "section": "gear",
-          "method": "uploadProgram",
-          "mortal_period": "512",
-          "mortal_phase": "61",
-          "is_success": true,
-          "is_signed": true,
-          "signer": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
-          "tip": "0",
-          "nonce": "1",
-          "event_id": [ 65-1,65-2,65-3,65-4,65-5,65-6,65-7 ]
+        { 'block_id': '30',
+          'blockchain_id': '137',
+          'blockchain_name': 'gear',
+          'extrinsic_id': '30-1',
+          'is_signed': False,
+          'is_success': True,
+          'method': 'run',
+          'mortal_period': null,
+          'mortal_phase': null,
+          'nonce': '0.0',
+          'parent_id': null,
+          'section': 'gear',
+          'signer': null,
+          'tip': '0',
+          'decoded_extrinsic': '{"args": {}, "method": "run", "section": "gear"}',
+          'events': [{'event_id': '30-1'}]
         }
       ]
       properties:
@@ -385,11 +448,53 @@ components:
         nonce:
           type: string
           description: Nonce of extrinsic.
-        event_id:
+        events:
           type: array
           description: The list of events that were called by extrinsic.
           items:
             type: string
+        decoded_extrinsic:
+          type: string
+          description: Decoded data of extrinsic.
+
+    EventCollectionItem:
+      description: >
+        Event info collection item.
+
+      type: object
+      example: [
+        {
+          'block_id': '70',
+          'blockchain_id': '137',
+          'blockchain_name': 'gear',
+          'decoded_event': '{"data": ["5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY", 1169968249000], "index": "0x0507"}',
+          'event_id': '70-4',
+          'method': 'Deposit',
+          'section': 'balances'
+        }
+      ]
+      properties:
+        event_id:
+          type: string
+          description: Id of event.
+        blockchain_id:
+          type: string
+          description: Unique id of network.
+        blockchain_name:
+          type: string
+          description: The name of blockchain.
+        block_id:
+          type: string
+          description: Id of block.
+        section:
+          type: string
+          description: Section for extrinsic calling.
+        method:
+          type: string
+          description: Method for extrinsic calling.
+        decoded_event:
+          type: string
+          description: Decoded data of event.
 
     AccountsCollection:
       type: object
@@ -434,10 +539,22 @@ components:
       allOf:
         - type: object
           properties:
-            messages:
+            extrinsics:
               type: array
               items:
                 $ref: '#/components/schemas/ExtrinsicCollectionItem'
+
+    EventCollection:
+      type: object
+      description: |
+        Collection of events.
+      allOf:
+        - type: object
+          properties:
+            events:
+              type: array
+              items:
+                $ref: '#/components/schemas/EventCollectionItem'
 
     # Error response
     401ErrorCode:
@@ -518,7 +635,7 @@ components:
   parameters:
     # Database entity fields
     BlockchainUserId:
-      in: query
+      in: path
       name: blockchain_user_id
       schema:
         type: string
@@ -526,8 +643,8 @@ components:
       description: |
         Public key of blockchain account (user).
 
-    SmartContractId:
-      in: query
+    SmartContractIdInfo:
+      in: path
       name: smart_contract_id
       schema:
         type: string
@@ -535,14 +652,32 @@ components:
       description: |
         Public key of smart contract.
 
+    SmartContractIdMessage:
+      in: path
+      name: smart_contract_id
+      schema:
+        type: string
+      required: true
+      description: |
+        Id of extrinsic.
+
     ExtrinsicId:
-      in: query
+      in: path
       name: extrinsic_id
       schema:
         type: string
       required: false
       description: |
         Id of extrinsic.
+
+    EventId:
+      in: path
+      name: event_id
+      schema:
+        type: string
+      required: false
+      description: |
+        Id of event.
 
     # Filters
     FilterExecutionDateFrom:
