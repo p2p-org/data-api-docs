@@ -44,7 +44,7 @@ info:
 
     For e.g., here is how to get blockchains list with [curl](https://p2p.staking.api/blockchains/list), when basic authorization is used:
     ```bash
-    curl -X GET 'https://p2p.staking.api.gear.hasura.app/api/rest/blockchains' \
+    curl -X GET 'https://gear-staking-api-p2p.hasura.app/api/rest/accounts' \
     -H 'Content-Type: application/json' \
     -H 'x-hasura-admin-secret: secret' \
     ```
@@ -112,7 +112,7 @@ paths:
         '500':
           $ref: '#/components/responses/Unknown'
 
-  /smart-contracts:
+  /smartcontracts:
     get:
       summary: Get smart contracts info
       description: Method returns the information about smart contracts in Gear.
@@ -134,7 +134,7 @@ paths:
         '500':
           $ref: '#/components/responses/Unknown'
 
-  /smart-contracts/messages:
+  /smartcontracts/messages:
     get:
       summary: Get smart contract messages
       description: Method returns the messages between blockchain users and smart contracts.
