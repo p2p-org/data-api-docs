@@ -197,7 +197,7 @@ paths:
         '500':
           $ref: '#/components/responses/Unknown'
 
-  /extrinsic:
+  /extrinsics:
     get:
       summary: Get extrinsics list
       description: Method returns a list of extrinsic in Gear.
@@ -217,7 +217,7 @@ paths:
         '500':
           $ref: '#/components/responses/Unknown'
 
-  /extrinsic/{extrinsic_id}:
+  /extrinsics/{extrinsic_id}:
     get:
       summary: Get extrinsic
       description: Method returns info on particular extrinsic.
