@@ -113,7 +113,7 @@ paths:
         '500':
           $ref: '#/components/responses/Unknown'
 
-  /blockchains/periods:
+  /blockchains/{blockchain_name}/periods:
     get:
       summary: Blockchains periods
       description: |
@@ -137,7 +137,7 @@ paths:
         '500':
           $ref: '#/components/responses/Unknown'
 
-  /blockchains/report:
+  /blockchains/{blockchain_name}/report:
     get:
       summary: Blockchains on-chain report
       description: |
@@ -164,7 +164,7 @@ paths:
         '500':
           $ref: '#/components/responses/Unknown'
 
-  /validators:
+  /blockchains/{blockchain_name}/validators:
     get:
       summary: List validators
       description: Get the list of active validators per period.
@@ -189,7 +189,7 @@ paths:
         '500':
           $ref: '#/components/responses/Unknown'
 
-  /validators/report:
+  /blockchains/{blockchain_name}/validators/report:
     get:
       summary: Validators on-chain report
       description: |
@@ -217,7 +217,7 @@ paths:
         '500':
           $ref: '#/components/responses/Unknown'
 
-  /delegators/report:
+  /blockchains/{blockchain_name}/delegators/report:
     get:
       summary: Delegators on-chain report
       description: Get delegator on-chain report.
@@ -770,7 +770,7 @@ components:
 
     # Database entity fields
     BlockchainName:
-      in: query
+      in: path
       name: blockchain_name
       schema:
         type: string
