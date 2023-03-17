@@ -217,6 +217,32 @@ paths:
         '500':
           $ref: '#/components/responses/Unknown'
 
+  /blockchains/{blockchain_name}/delegators:
+    get:
+      summary: List delegators
+      description: Get the list of active delegators per period.
+      operationId: getDelegatorsList
+      tags: [ Delegators ]
+      parameters:
+        - $ref: '#/components/parameters/BlockchainName'
+        - $ref: '#/components/parameters/FilterExecutionDateFrom'
+        - $ref: '#/components/parameters/FilterExecutionDateTo'
+        - $ref: '#/components/parameters/PeriodCount'
+        - $ref: '#/components/parameters/ValidatorAddressDelegator'
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DelegatorCollection'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/Unknown'
+
   /blockchains/{blockchain_name}/delegators/report:
     get:
       summary: Delegators on-chain report
@@ -225,8 +251,6 @@ paths:
       tags: [ Delegators ]
       parameters:
         - $ref: '#/components/parameters/BlockchainName'
-#        - $ref: '#/components/parameters/BlockchainPeriodName'
-#        - $ref: '#/components/parameters/BlockchainPeriodNum'
         - $ref: '#/components/parameters/FilterExecutionDateFrom'
         - $ref: '#/components/parameters/FilterExecutionDateTo'
         - $ref: '#/components/parameters/PeriodCount'
@@ -395,7 +419,10 @@ components:
           description: The end of period (blockchain_period).
         validators_addresses:
           type: array
-          example: ["12eZSMk8GJYE2Lq943dSEnMUoZs1ek7jU8QN3rEA1yPZPjcR", "12pgR5dyEkUP6iTR9u7b74Nz7uCsCYKpkFfA5LFbQPjGwNHL"]
+          example: [
+            {"validator_address": "12eZSMk8GJYE2Lq943dSEnMUoZs1ek7jU8QN3rEA1yPZPjcR"},
+            {"validator_address": "12pgR5dyEkUP6iTR9u7b74Nz7uCsCYKpkFfA5LFbQPjGwNHL"}
+          ]
           items:
             type: string
           description: The list of validator addresses participated in staking for specific blockchain and specific period.
@@ -467,6 +494,54 @@ components:
           description: The array of validator’s rewards for this period.
           items:
             $ref: '#/components/schemas/RewardsItem'
+
+    DelegatorCollectionItem:
+      description: >
+        Delegator collection item.
+
+      type: object
+      properties:
+        blockchain_name:
+          type: string
+          example: "Polkadot"
+          description: The name of the blockchain.
+        ecosystem_name:
+          type: string
+          example: "Polkadot ecosystem"
+          description: The name of Ecosystem.
+        blockchain_period_name:
+          type: string
+          enum:
+            - era
+            - block
+            - epoch
+          example: "era"
+          description: The name of period that rewards and other stat are collected by the API.
+        blockchain_period_num:
+          type: string
+          example: "1016"
+          description: |
+            The value of blockchain_period
+            (number in case of `era` `epoc` `block` and the day in case of point in time).
+        datetime_from:
+          type: string
+          example: "2023-03-14 15:36:18.014000"
+          format: datetime
+          description: The start of period (blockchain_period).
+        datetime_to:
+          type: string
+          example: "2023-03-15 15:36:18.011000"
+          format: datetime
+          description: The end of period (blockchain_period).
+        blockchain_user_address:
+          type: array
+          example: [
+            {"blockchain_user_address": "1BEV8SuBhtFYcXhwesJf9cePgpFjGzY58ybnb4yfrEAaBMx"},
+            {"blockchain_user_address": "1MUoG2n9WhmXUszhuQdyPeXSGg7MoVn8ZFaZnXyGyzs4wW1"}
+          ]
+          items:
+            type: string
+          description: The list of active delegator addresses.
 
     DelegatorReportCollectionItem:
       description: >
@@ -660,6 +735,18 @@ components:
               items:
                 $ref: '#/components/schemas/ValidatorReportCollectionItem'
 
+    DelegatorCollection:
+      type: object
+      description: |
+        Collection of delegators.
+      allOf:
+        - type: object
+          properties:
+            delegators:
+              type: array
+              items:
+                $ref: '#/components/schemas/DelegatorCollectionItem'
+
     DelegatorReportCollection:
       type: object
       description: |
@@ -815,6 +902,14 @@ components:
       name: validator_address
       schema:
         type: string
+      required: true
+      description: Validator public key.
+
+    ValidatorAddressDelegator:
+      in: query
+      name: validator_address
+      schema:
+        type: string
       required: false
       description: Validator public key.
 
@@ -823,7 +918,7 @@ components:
       name: blockchain_user_address
       schema:
         type: string
-      required: false
+      required: true
       description: Delegator public key.
 
     # Filters
