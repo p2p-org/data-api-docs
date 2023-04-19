@@ -268,6 +268,50 @@ paths:
         '500':
           $ref: '#/components/responses/Unknown'
 
+  /deposits/{deposit_address}/apr:
+    get:
+      summary: APR
+      description: Get APR for given deposit address.
+      operationId: getAprForDepositAddress
+      tags: [ Delegators ]
+      parameters:
+        - $ref: '#/components/parameters/DepositAddress'
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DelegatorAprCollection'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/Unknown'
+
+  /deposits/{deposit_address}/total_rewards:
+    get:
+      summary: Rewards
+      description: Get total rewards for given deposit address.
+      operationId: getTotalRewardsForDepositAddress
+      tags: [ Delegators ]
+      parameters:
+        - $ref: '#/components/parameters/DepositAddress'
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DelegatorTotalRewardsCollection'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/Unknown'
+
 components:
   # Reusable schemas (data models)
   schemas:
@@ -607,6 +651,28 @@ components:
           items:
             $ref: '#/components/schemas/DelegatorRewardsItem'
 
+    DelegatorAprCollectionItem:
+      description: >
+        Delegator APR item.
+
+      type: object
+      properties:
+        apr:
+          type: string
+          example: "4.7415101558088555"
+          description: The annual percentage rate.
+
+    DelegatorTotalRewardsCollectionItem:
+      description: >
+        Delegator total rewards item.
+
+      type: object
+      properties:
+        total_rewards:
+          type: string
+          example: "0.06417987100000008"
+          description: The total rewards.
+
     StakeItem:
       type: object
       properties:
@@ -758,6 +824,30 @@ components:
               items:
                 $ref: '#/components/schemas/DelegatorReportCollectionItem'
 
+    DelegatorAprCollection:
+      type: object
+      description: |
+        Collection of APR.
+      allOf:
+        - type: object
+          properties:
+            result:
+              type: array
+              items:
+                $ref: '#/components/schemas/DelegatorAprCollectionItem'
+
+    DelegatorTotalRewardsCollection:
+      type: object
+      description: |
+        Collection of total rewards.
+      allOf:
+        - type: object
+          properties:
+            result:
+              type: array
+              items:
+                $ref: '#/components/schemas/DelegatorTotalRewardsCollectionItem'
+
     # Error response
     401ErrorCode:
       description: |
@@ -855,6 +945,15 @@ components:
       description: The numbers of items to return.
 
     # Database entity fields
+    DepositAddress:
+      in: path
+      name: deposit_address
+      schema:
+        type: string
+      required: true
+      description: |
+        The blockchain user address.
+
     BlockchainName:
       in: path
       name: blockchain_name
