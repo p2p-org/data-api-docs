@@ -1,0 +1,73 @@
+# This is a sample GraphQL schema for Osmosis pools data.
+#
+# This schema is prepared to be run as a fake API by (GraphQL faker)[https://github.com/graphql-kit/graphql-faker].
+#
+
+
+# Token in the pool
+type Token {
+  # Token's id
+  id: String @fake(type: bitcoinAddress)
+  
+  # Token's name
+  name: String @examples(values: ["OSMO", "ATOM", "stJUNO", "JUNO", "ION", "WHALE", "DVPN"])
+}
+
+# Token's liquidity in the pool
+type TokenLiquidity {
+  # Token
+  token: Token
+  
+  # Amount of supply in the pool
+  amount: Int
+}
+
+# Participant in the pool
+type Participant {
+  # Pool participant's address
+  address: String @fake(type: bitcoinAddress)
+}
+
+
+# Osmosis pool
+type Pool {
+  # Osmosis pool's ID
+  id: Int
+  
+  # Osmosis pool's name
+  name: String @examples(values: ["ATOM/OSMO", "JUNO/stJUNO", "ION/OSMO", "WHALE/OSMO", "ATOM/DVPN"])
+  
+  # Osmosis pool's list of token supply
+  tokens: [TokenLiquidity!] @listLength(min: 2, max: 2)
+  
+  # Osmosis pool's list of participants
+  participants: [Participant!] @listLength(min: 1, max: 5)
+  
+  # Osmosis pool's tvl
+  tvl: Float
+  
+  # Osmosis pool's fee
+  fees: Float
+  
+  # Osmosis pool's APR
+  apr: Float
+}
+
+# The query root of Glassmarkets API interface.
+type Query {
+  # Fetches a Token object given its ID.
+  token(id: ID): Token
+  
+  allTokens: [Token!]
+  
+  # Lookup tokens by a list of IDs.
+  tokens(ids: [ID!]!): [Token!]
+	
+  # Fetches a Pool object given its ID.
+  pool(id: ID): Pool
+  
+  # Lookup pools by a list of IDs.
+  pools(ids: [ID!]!): [Pool!]
+  
+  allPools: [Pool!]
+}

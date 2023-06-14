@@ -1,0 +1,11 @@
+{
+  "name": "osmosis-api-docs",
+  "version": "1.0.0",
+  "description": "This is a repository containing GraphQL documentation for the `Osmosis pools data API` project.",
+  "scripts": {
+    "build": "magidoc generate"
+  },
+  "dependencies": {
+    "@magidoc/cli": "^4.0.0"
+  }
+}
