@@ -14,6 +14,8 @@ export default {
   website: {
     template: 'carbon-multi-page',
     staticAssets: relativePath('./assets'),
+    siteRoot: '/osmosis/docs',
+    output: 'static/stakingapi/doc/',
     options: {
       appTitle: 'Osmosis Pools API',
       appLogo: '/p2p_logo_white@2x.png',

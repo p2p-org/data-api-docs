@@ -23,7 +23,7 @@ jobs:
         with:
           name: static-content
           path: |
-            docs/**/*.*
+            static/osmosis/doc/*
           retention-days: 1
   publish:
     runs-on: ubuntu-22.04
