@@ -4,6 +4,6 @@ This repository is a collection of documentation sites for various projects buil
 
 Refer to the specific project README files for more details:
 
-* `gear` (README)[gear/README.md] – Redocly documentation for Gear staking data REST API
-* `stakingapi` (README)[stakingapi/README.md] – Redocly documentation for commong staking data REST API
-* `osmosis` (README)[osmosis/README.md] – Magidoc documentation for Osmosis pools GraphQL API
+* `gear` [README](gear/README.md) – Redocly documentation for Gear staking data REST API
+* `stakingapi` [README](stakingapi/README.md) – Redocly documentation for commong staking data REST API
+* `osmosis` [README](osmosis/README.md) – Magidoc documentation for Osmosis pools GraphQL API
