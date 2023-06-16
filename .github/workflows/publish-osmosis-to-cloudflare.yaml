@@ -6,15 +6,15 @@ on:
       - main
       - tool-207-osmosis-2
 
-defaults:
-  run:
-    working-directory: osmosis
-
 jobs:
   build:
     name: Build docs with magidoc
     
     runs-on: ubuntu-22.04
+
+    defaults:
+      run:
+        working-directory: osmosis
     
     steps:
       - uses: actions/checkout@v3
