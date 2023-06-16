@@ -31,11 +31,10 @@ jobs:
         with:
           name: static-content
           path: |
-            static/osmosis/doc/*
+            osmosis/static/osmosis/doc/*
           retention-days: 1
   
   publish:
-    
     name: Publishes generated docs to Cloudflare
     
     runs-on: ubuntu-22.04
