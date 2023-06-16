@@ -5,21 +5,28 @@ on:
     branches:
       - main
       - tool-207-osmosis-2
+
+defaults:
+  run:
+    working-directory: osmosis
+
 jobs:
   build:
     name: Build docs with magidoc
+    
     runs-on: ubuntu-22.04
-    defaults:
-      run:
-        working-directory: osmosis
+    
     steps:
       - uses: actions/checkout@v3
+      
       - uses: actions/setup-node@v3
         with:
-          node-version: 16.19.0
           cache: 'npm'
+      
       - run: yarn
+      
       - run: npm run build
+      
       - uses: actions/upload-artifact@v3
         with:
           name: static-content
@@ -27,18 +34,21 @@ jobs:
             static/osmosis/doc/*
           retention-days: 1
   publish:
+    
     name: Publishes generated docs to Cloudflare
+    
     runs-on: ubuntu-22.04
-    defaults:
-      run:
-        working-directory: osmosis
+    
     needs: build
+    
     permissions:
       contents: read
+    
     steps:
       - uses: actions/download-artifact@v3
         with:
           name: static-content
+      
       - id: publish
         uses: cloudflare/pages-action@v1.3.0
         with:
@@ -46,6 +56,7 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           projectName: osmosis-data-api-docs
           directory: .
+      
       - name: Outputs
         run: |
           echo "ID: ${{ steps.publish.outputs.id }}"
