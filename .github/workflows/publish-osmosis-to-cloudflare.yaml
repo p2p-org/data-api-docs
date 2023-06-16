@@ -39,7 +39,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: data-api-docs
+          projectName: osmosis-data-api-docs
           directory: .
       - name: Outputs
         run: |
