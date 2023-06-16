@@ -33,6 +33,7 @@ jobs:
           path: |
             static/osmosis/doc/*
           retention-days: 1
+  
   publish:
     
     name: Publishes generated docs to Cloudflare
