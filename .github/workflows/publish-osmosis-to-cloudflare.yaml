@@ -27,7 +27,11 @@ jobs:
             static/osmosis/doc/*
           retention-days: 1
   publish:
+    name: Publishes generated docs to Cloudflare
     runs-on: ubuntu-22.04
+    defaults:
+      run:
+        working-directory: osmosis
     needs: build
     permissions:
       contents: read
