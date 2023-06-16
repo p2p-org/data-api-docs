@@ -1,10 +1,16 @@
+name: Publish Osmosis API doc to Cloudflare
+
 on:
   push:
     branches:
       - main
 jobs:
   build:
+    name: Build docs with magidoc
     runs-on: ubuntu-22.04
+    defaults:
+      run:
+        working-directory: osmosis
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -17,9 +23,7 @@ jobs:
         with:
           name: static-content
           path: |
-            static/stakingapi/doc/index.html
-            static/robots.txt
-            static/favicon.ico
+            static/osmosis/doc/*
           retention-days: 1
   publish:
     runs-on: ubuntu-22.04
@@ -35,7 +39,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: data-api-docs
+          projectName: osmosis-data-api-docs
           directory: .
       - name: Outputs
         run: |
