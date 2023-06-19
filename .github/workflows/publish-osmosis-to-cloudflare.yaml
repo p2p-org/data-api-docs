@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - tool-207-osmosis-2
 
 jobs:
   build:
