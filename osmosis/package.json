@@ -6,6 +6,6 @@
     "build": "magidoc generate"
   },
   "dependencies": {
-    "@magidoc/cli": "^4.0.0"
+    "@magidoc/cli": "^4.1.0"
   }
 }
